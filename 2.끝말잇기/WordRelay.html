@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>끝말잇기</title>
+</head>
+<body>
+    <!-- 1. 태그를 먼저 작성
+         2. 바뀌는 부분을 data로 작성 -->
+    <div id="root">
+        <div>{{word}}</div>
+        <form v-on:submit="onSubmitForm">
+            <input type="text" ref="value" v-model="value">
+            <button type="submit">입력</button>
+        </form>
+        <div>{{result}}</div>
+    </div>
+
+    
+</body>
+<script>
+    const app = new Vue({ // vue에게 tag의 통제권을 넘기는 것
+        el: '#root',
+        data: {
+            word: '제로초',
+            result: '',
+            value: '',
+        },
+        methods: {
+            onSubmitForm(e) {
+                e.preventDefault();
+
+                let length = this.word.length;
+                
+                if(this.value === '') {
+                    this.result = '단어를 입력하세요'
+                    return;
+                } else if(this.word[length-1] == this.value[0]) {
+                    this.word = this.value;
+                    this.value = '',
+                    this.result = '딩동댕!!!'
+                    this.$refs.value.focus();
+                } else {
+                    this.result = "땡! 다시 입력하세요"
+                    this.value = '';
+                    this.$refs.value.focus();
+                }
+            },
+        },
+    })
+</script>
+</html>

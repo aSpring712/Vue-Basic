@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구구단</title>
+    <!-- Vue 도움되는 콘솔 경고를 포함한 개발 버전 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <!-- toString 되어 최종 결과값은 String형으로 표시됨
+        {{안에도 js 쓸 수 있음}} -->
+        <div>{{first}} 곱하기 {{second}}는?</div>
+        <form v-on:submit="onSubmitForm">
+            <!-- input 안에 들어가는 숫자를 data와 연결하고 싶을 때, v-model : 양방향 binding-->
+            <input type="number" ref="answer" v-model="value">
+            <!-- html에 접근할 때 -> input 태그에 answer라는 이름 붙여줌 -->
+            <button type="submit">입력</button>
+            <!-- <div>{{value}}</div> -->
+            <!-- form 안의 button은 click 시 제출이 됨 -->
+        </form>
+        <div id="result">{{result}}</div>
+    </div>
+    <script>
+    const app = new Vue({
+        el: '#root',
+        data: { // 바뀌는 부분이 data가 됨
+            first: Math.ceil(Math.random() * 9), // 1 ~ 9까지 Random한 숫자 만들기
+            second: Math.ceil(Math.random() * 9),
+            value: '',
+            result: '',
+        },
+        methods: {
+            onSubmitForm(e) {
+                e.preventDefault(); // Form이 기본적으로 하는 페이지 새로고침 방지
+                console.log(this)
+                console.log(this.first, this.second, this.value)
+                // input -> String으로 들어감
+
+                if (this.first * this.second === parseInt(this.value)) {
+                    this.result = '정답';
+                    this.first = Math.ceil(Math.random() * 9);
+                    this.second = Math.ceil(Math.random() * 9);
+                    this.value = '';
+                    // 직접 tag에 접근 -> 도저히 data로 접근하지 못할 때만 사용 -> refs 남용 금지 
+                    // -> 직접 값 집어넣는 등 하지 말기!! 화면과 data가 불일치되는 문제가 발생
+                    this.$refs.answer.focus();
+                } else {
+                    this.result = '땡';
+                    this.value = '';
+                    this.$refs.answer.focus();
+                }
+            }
+        },
+    });
+</script>
+</body>
+</html>
